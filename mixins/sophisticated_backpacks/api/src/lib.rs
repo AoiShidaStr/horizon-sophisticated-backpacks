@@ -15,8 +15,9 @@ use std::sync::{Mutex, MutexGuard, OnceLock};
 
 use horizon_client::mod_api::{
     BlockEntityContainerEvent, BlockEntityEvent, BlockEntityTickEvent, BlockEntityTicksEvent,
-    Compound, Flow, Hooks, Host, InventoryTickEvent, ItemContainerEvent, ItemStack,
-    MenuClickedEvent, MenuClosedEvent, ModContainer, PlaceBlockEvent, Text, UseItemEvent,
+    Compound, EquipmentSlot, Flow, Hooks, Host, InventoryTickEvent, ItemContainerEvent, ItemStack,
+    KeyEvent, MenuClickedEvent, MenuClosedEvent, ModContainer, ModsEvent, NativeMod,
+    NetFromClientEvent, PlaceBlockEvent, Text, UseItemEvent,
 };
 
 pub fn hooks() -> Box<dyn Hooks> {
@@ -34,6 +35,14 @@ const TIERS: [(&str, usize); 5] = [
 ];
 
 const MOD: &str = "sophisticated_backpacks";
+
+/// The key's name in Options > Mods, and the key it starts as.
+const KEY_NAME: &str = "open_backpack";
+const KEY_DEFAULT: &str = "key.keyboard.b";
+/// The client asks its server to open the worn backpack on this channel.
+const CHANNEL_OPEN: &str = "sophisticated_backpacks:open";
+/// The chest armour slot, as `inventory_tick` numbers it.
+const CHEST_SLOT: i32 = 102;
 
 /// The item a carried stack is inside a backpack menu, by id.
 fn item_slots(item: &str) -> Option<usize> {
@@ -296,6 +305,59 @@ impl Backpacks {
         );
         // The item's own use (equipping it, a chestplate's pose) doesn't run.
         Flow::Cancel
+    }
+
+    /// Opens the backpack worn in the chest armour slot, for the player
+    /// `uuid` (any player on the server, from a key on their client).
+    ///
+    /// The slot itself is read and written through a living handle, because
+    /// a received message has no acting player swapped in; the menu's clicks
+    /// then go through `flush_actions` on that slot's inventory tick, as a
+    /// backpack opened from the hand does.
+    fn open_worn(&self, host: &mut dyn Host, uuid: u128) -> bool {
+        let Some(player) = host
+            .server_players()
+            .into_iter()
+            .find(|player| player.uuid == uuid)
+        else {
+            return false;
+        };
+        let Ok(entity_id) = u32::try_from(player.entity_id) else {
+            return false;
+        };
+        let Some(entity) = host.entity(entity_id) else {
+            return false;
+        };
+        let Some(living) = host.living(entity) else {
+            return false;
+        };
+        let Some(backpack) = living.equipment(host, EquipmentSlot::Chest) else {
+            return false;
+        };
+        let Some(slots) = item_slots(&backpack.item) else {
+            return false;
+        };
+        let contents = contents_of(&backpack, slots);
+        let Some(window) = host.open_menu(
+            uuid,
+            (slots / 9) as u8,
+            Text::literal("Backpack"),
+            contents.clone(),
+        ) else {
+            return false;
+        };
+        state().sessions.insert(
+            uuid,
+            Session {
+                window,
+                slot: CHEST_SLOT,
+                item: backpack.item.to_string(),
+                slots,
+                contents,
+                actions: Vec::new(),
+            },
+        );
+        true
     }
 
     /// Runs the clicks queued for an open backpack, then shows the result.
@@ -752,6 +814,43 @@ impl Hooks for Backpacks {
     /// Right-clicking a backpack in the hand opens it.
     fn use_item(&self, host: &mut dyn Host, event: &mut UseItemEvent<'_>) -> Flow {
         self.open(host, event.stack)
+    }
+
+    /// Options > Mods lists the mod and its key.
+    fn mods(&self, _host: &mut dyn Host, event: &mut ModsEvent<'_>) {
+        event.mods.push(NativeMod {
+            id: MOD.to_owned(),
+            title: "Sophisticated Backpacks".to_owned(),
+            description: "Wearable backpacks with tiers and upgrades. Right-click one to open it, \
+                          or press the backpack key to open the one you are wearing."
+                .to_owned(),
+            keys: vec![[
+                KEY_NAME.to_owned(),
+                "Open worn backpack".to_owned(),
+                KEY_DEFAULT.to_owned(),
+            ]],
+        });
+    }
+
+    /// The backpack key: ask the server to open the worn backpack. The server
+    /// owns the contents, so this only sends the request.
+    fn key(&self, host: &mut dyn Host, event: &mut KeyEvent<'_>) {
+        if !event.pressed || !host.playing() {
+            return;
+        }
+        if event.key == host.mod_key(MOD, KEY_NAME, KEY_DEFAULT) {
+            let _ = host.net_send_to_server(CHANNEL_OPEN, b"open");
+        }
+    }
+
+    /// A player asked for their worn backpack.
+    fn net_from_client(&self, host: &mut dyn Host, event: &mut NetFromClientEvent<'_>) {
+        if event.channel != CHANNEL_OPEN {
+            return;
+        }
+        if !self.open_worn(host, event.player) {
+            host.action_bar(event.player, Text::literal("No backpack equipped"));
+        }
     }
 
     fn menu_clicked(&self, host: &mut dyn Host, event: &mut MenuClickedEvent) {

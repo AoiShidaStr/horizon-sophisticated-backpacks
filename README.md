@@ -36,6 +36,12 @@ One file holds both halves: `dist/sophisticated_backpacks.hmod`.
   (`use_item` + `open_menu`/`set_menu_items`): left click moves a whole stack,
   right click half a stack, from and to the player's 36 inventory slots. Every
   click is checked and applied on the server on the next inventory tick.
+- The **backpack key** (default `B`, rebindable in Options > Mods) opens the
+  backpack worn in the chest slot: the client sends a message on
+  `sophisticated_backpacks:open` (`key` + `net_send_to_server`) and the server
+  opens the same menu on the worn item (`net_from_client`, `server_players`,
+  `living`/`equipment`, `open_menu`). Clicks are applied on that slot's
+  inventory tick exactly as for a carried backpack.
 - The placed form gives the block a mod container with exactly the tier's
   slots and a vanilla chest menu (`block_entity_container`), so hoppers and
   vanilla clients see it as an ordinary storage block.
@@ -53,10 +59,6 @@ One file holds both halves: `dist/sophisticated_backpacks.hmod`.
 - **Menus are chest-style rows**, not a custom backpack screen: no colour
   swatches, no upgrade slots panel, no sort/search buttons. Upgrades are
   simply kept in the backpack's own inventory.
-- **No keybind** to open the backpack while it is in the inventory/armour
-  slot; it opens on right click while held in the hand. A worn backpack still
-  stores items that upgrades and the item data see, but it cannot be opened
-  from the chest slot.
 - **The worn model and armour values are the leather chestplate's**: the item
   copies `minecraft:leather_chestplate` for the chest slot, so on a player it
   renders as a chestplate rather than a backpack. Its icon is the backpack
@@ -94,7 +96,8 @@ cargo horizon-mod check dist/sophisticated_backpacks.hmod
 
 `horizon-native.json` and `horizon-mixin.toml` pin Horizon commit
 `a85af177` and horizon-mixins `5a64af93`, the versions this port was built
-against. `hooks` is 370, the highest hook point it uses.
+against. `hooks` is 398, the highest hook point it uses (the worn-backpack key
+reads `NativeServerPlayer.entity_id`, API 398).
 
 ## Licensing
 
