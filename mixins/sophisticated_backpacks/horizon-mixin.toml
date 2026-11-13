@@ -1,0 +1,9 @@
+[mod]
+id = "sophisticated_backpacks"
+version = "0.1.0"
+
+[compatibility]
+horizon_revision = "a85af177a82504f357ff10d5d40d0b7230e2ac32"
+
+[api]
+path = "api"

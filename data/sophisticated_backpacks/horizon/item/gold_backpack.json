@@ -1,0 +1,4 @@
+{
+  "template": "minecraft:leather_chestplate",
+  "place_block": "sophisticated_backpacks:gold_backpack_block"
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "NNN",
+    "NBN",
+    "NNN"
+  ],
+  "key": {
+    "N": "minecraft:netherite_ingot",
+    "B": "sophisticated_backpacks:diamond_backpack"
+  },
+  "result": {
+    "id": "sophisticated_backpacks:netherite_backpack",
+    "count": 1
+  }
+}

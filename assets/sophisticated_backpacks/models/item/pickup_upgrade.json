@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "sophisticated_backpacks:item/pickup_upgrade"
+  }
+}

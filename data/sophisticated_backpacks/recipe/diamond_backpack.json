@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "DDD",
+    "DBD",
+    "DDD"
+  ],
+  "key": {
+    "D": "minecraft:diamond",
+    "B": "sophisticated_backpacks:gold_backpack"
+  },
+  "result": {
+    "id": "sophisticated_backpacks:diamond_backpack",
+    "count": 1
+  }
+}

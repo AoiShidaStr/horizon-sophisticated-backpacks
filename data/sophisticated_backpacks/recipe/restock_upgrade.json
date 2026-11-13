@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "PCP",
+    "PPP"
+  ],
+  "key": {
+    "P": "minecraft:paper",
+    "C": "minecraft:chest"
+  },
+  "result": {
+    "id": "sophisticated_backpacks:restock_upgrade",
+    "count": 1
+  }
+}

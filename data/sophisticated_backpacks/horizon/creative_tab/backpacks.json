@@ -1,0 +1,14 @@
+{
+  "title": "itemGroup.sophisticated_backpacks.backpacks",
+  "icon": "sophisticated_backpacks:leather_backpack",
+  "items": [
+    "sophisticated_backpacks:leather_backpack",
+    "sophisticated_backpacks:iron_backpack",
+    "sophisticated_backpacks:gold_backpack",
+    "sophisticated_backpacks:diamond_backpack",
+    "sophisticated_backpacks:netherite_backpack",
+    "sophisticated_backpacks:pickup_upgrade",
+    "sophisticated_backpacks:restock_upgrade",
+    "sophisticated_backpacks:compacting_upgrade"
+  ]
+}

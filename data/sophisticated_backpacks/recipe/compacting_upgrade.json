@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "PTP",
+    "PPP"
+  ],
+  "key": {
+    "P": "minecraft:paper",
+    "T": "minecraft:crafting_table"
+  },
+  "result": {
+    "id": "sophisticated_backpacks:compacting_upgrade",
+    "count": 1
+  }
+}

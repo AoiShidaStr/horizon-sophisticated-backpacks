@@ -1,0 +1,11 @@
+{
+  "itemGroup.sophisticated_backpacks.backpacks": "Sacs \u00e0 dos sophistiqu\u00e9s",
+  "item.sophisticated_backpacks.pickup_upgrade": "Am\u00e9lioration de ramassage",
+  "item.sophisticated_backpacks.restock_upgrade": "Am\u00e9lioration de r\u00e9approvisionnement",
+  "item.sophisticated_backpacks.compacting_upgrade": "Am\u00e9lioration de compactage",
+  "item.sophisticated_backpacks.leather_backpack": "Sac \u00e0 dos En cuir",
+  "item.sophisticated_backpacks.iron_backpack": "Sac \u00e0 dos En fer",
+  "item.sophisticated_backpacks.gold_backpack": "Sac \u00e0 dos En or",
+  "item.sophisticated_backpacks.diamond_backpack": "Sac \u00e0 dos En diamant",
+  "item.sophisticated_backpacks.netherite_backpack": "Sac \u00e0 dos En netherite"
+}

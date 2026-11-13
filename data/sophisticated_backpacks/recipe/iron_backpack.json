@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "III",
+    "IBI",
+    "III"
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "B": "sophisticated_backpacks:leather_backpack"
+  },
+  "result": {
+    "id": "sophisticated_backpacks:iron_backpack",
+    "count": 1
+  }
+}

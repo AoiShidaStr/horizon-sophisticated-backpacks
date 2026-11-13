@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "PHP",
+    "PPP"
+  ],
+  "key": {
+    "P": "minecraft:paper",
+    "H": "minecraft:hopper"
+  },
+  "result": {
+    "id": "sophisticated_backpacks:pickup_upgrade",
+    "count": 1
+  }
+}

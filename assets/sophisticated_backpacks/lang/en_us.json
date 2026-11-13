@@ -1,0 +1,11 @@
+{
+  "itemGroup.sophisticated_backpacks.backpacks": "Sophisticated Backpacks",
+  "item.sophisticated_backpacks.pickup_upgrade": "Pickup Upgrade",
+  "item.sophisticated_backpacks.restock_upgrade": "Restock Upgrade",
+  "item.sophisticated_backpacks.compacting_upgrade": "Compacting Upgrade",
+  "item.sophisticated_backpacks.leather_backpack": "Leather Backpack",
+  "item.sophisticated_backpacks.iron_backpack": "Iron Backpack",
+  "item.sophisticated_backpacks.gold_backpack": "Gold Backpack",
+  "item.sophisticated_backpacks.diamond_backpack": "Diamond Backpack",
+  "item.sophisticated_backpacks.netherite_backpack": "Netherite Backpack"
+}

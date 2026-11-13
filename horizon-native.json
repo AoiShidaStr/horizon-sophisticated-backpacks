@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "id": "sophisticated_backpacks",
+  "version": "0.1.0",
+  "game": "26.3",
+  "horizon": "a85af177a82504f357ff10d5d40d0b7230e2ac32",
+  "mixins": "5a64af938ec86b00d53d16a408aabc0038fb3e57",
+  "hooks": 370
+}

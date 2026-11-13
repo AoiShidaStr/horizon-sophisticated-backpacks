@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "facing=down,open=false": {
+      "model": "sophisticated_backpacks:block/gold_backpack_block"
+    },
+    "facing=down,open=true": {
+      "model": "sophisticated_backpacks:block/gold_backpack_block"
+    },
+    "facing=east,open=false": {
+      "model": "sophisticated_backpacks:block/gold_backpack_block"
+    },
+    "facing=east,open=true": {
+      "model": "sophisticated_backpacks:block/gold_backpack_block"
+    },
+    "facing=north,open=false": {
+      "model": "sophisticated_backpacks:block/gold_backpack_block"
+    },
+    "facing=north,open=true": {
+      "model": "sophisticated_backpacks:block/gold_backpack_block"
+    },
+    "facing=south,open=false": {
+      "model": "sophisticated_backpacks:block/gold_backpack_block"
+    },
+    "facing=south,open=true": {
+      "model": "sophisticated_backpacks:block/gold_backpack_block"
+    },
+    "facing=up,open=false": {
+      "model": "sophisticated_backpacks:block/gold_backpack_block"
+    },
+    "facing=up,open=true": {
+      "model": "sophisticated_backpacks:block/gold_backpack_block"
+    },
+    "facing=west,open=false": {
+      "model": "sophisticated_backpacks:block/gold_backpack_block"
+    },
+    "facing=west,open=true": {
+      "model": "sophisticated_backpacks:block/gold_backpack_block"
+    }
+  }
+}
