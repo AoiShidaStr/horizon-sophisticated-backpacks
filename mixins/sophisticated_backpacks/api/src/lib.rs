@@ -56,7 +56,7 @@ fn item_slots(item: &str) -> Option<usize> {
 /// The backpack item a placed block stands for, by block id.
 fn block_info(block: &str) -> Option<(&'static str, usize)> {
     let name = block.strip_prefix(MOD)?.strip_prefix(':')?;
-    let tier = name.strip_suffix("_backpack_block")?;
+    let tier = name.strip_suffix("_block")?;
     let (item, slots) = TIERS.iter().find(|(known, _)| *known == tier)?;
     Some((item, *slots))
 }
