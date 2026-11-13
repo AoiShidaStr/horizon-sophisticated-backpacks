@@ -43,6 +43,8 @@ const KEY_DEFAULT: &str = "key.keyboard.b";
 const CHANNEL_OPEN: &str = "sophisticated_backpacks:open";
 /// The chest armour slot, as `inventory_tick` numbers it.
 const CHEST_SLOT: i32 = 102;
+/// The off hand, as `inventory_tick` numbers it.
+const OFFHAND_SLOT: i32 = -106;
 
 /// The item a carried stack is inside a backpack menu, by id.
 fn item_slots(item: &str) -> Option<usize> {
@@ -98,8 +100,10 @@ struct State {
     sessions: HashMap<u128, Session>,
     /// The selected hotbar slot, from `inventory_tick`'s `selected`.
     selected: HashMap<u128, i32>,
-    /// Backpack block contents to install on the first tick of a placed block.
-    pending: HashMap<[i32; 3], Vec<Option<ItemStack>>>,
+    /// Backpack block contents to install on the first tick of a placed
+    /// block, by level and position: `block_entity_tick` isn't told the
+    /// dimension, so it is read from the level in place (`host.dimension()`).
+    pending: HashMap<(&'static str, [i32; 3]), Vec<Option<ItemStack>>>,
     restock_wait: HashMap<u128, u32>,
     compact_wait: HashMap<u128, u32>,
     pickup_wait: HashMap<u128, u32>,
@@ -262,24 +266,31 @@ impl Backpacks {
         let uuid = player.uuid;
         let selected = state().selected.get(&uuid).copied();
         let carried = host.player_stacks(uuid);
-        let found = selected
-            .filter(|slot| {
-                carried
-                    .as_ref()
-                    .and_then(|stacks| stacks.get(*slot as usize))
-                    .and_then(Option::as_ref)
-                    .is_some_and(|held| held.item == stack.item)
-            })
-            .or_else(|| {
-                carried.as_ref().and_then(|stacks| {
-                    stacks
-                        .iter()
-                        .position(|held| {
-                            held.as_ref().is_some_and(|held| held.item == stack.item)
-                        })
-                        .map(|slot| slot as i32)
-                })
+        let mut found = selected.filter(|slot| {
+            carried
+                .as_ref()
+                .and_then(|stacks| stacks.get(*slot as usize))
+                .and_then(Option::as_ref)
+                .is_some_and(|held| held.item == stack.item)
+        });
+        if found.is_none() {
+            // Used from the off hand: `player_stacks` only has the 36
+            // inventory slots, so open the backpack where it lies.
+            found = host
+                .carried_stack(OFFHAND_SLOT)
+                .filter(|held| held.item == stack.item)
+                .map(|_| OFFHAND_SLOT);
+        }
+        if found.is_none() {
+            found = carried.as_ref().and_then(|stacks| {
+                stacks
+                    .iter()
+                    .position(|held| {
+                        held.as_ref().is_some_and(|held| held.item == stack.item)
+                    })
+                    .map(|slot| slot as i32)
             });
+        }
         let Some(slot) = found else {
             return Flow::Continue;
         };
@@ -296,7 +307,7 @@ impl Backpacks {
             uuid,
             Session {
                 window,
-                slot: slot as i32,
+                slot,
                 item: stack.item.to_string(),
                 slots,
                 contents,
@@ -937,12 +948,12 @@ impl Hooks for Backpacks {
         };
         let contents = contents_of(event.stack, slots);
         if contents.iter().any(Option::is_some) {
-            state().pending.insert(event.pos, contents);
+            state().pending.insert((host.dimension(), event.pos), contents);
         }
     }
 
-    fn block_entity_tick(&self, _host: &mut dyn Host, event: &mut BlockEntityTickEvent<'_>) {
-        let Some(contents) = state().pending.remove(&event.pos) else {
+    fn block_entity_tick(&self, host: &mut dyn Host, event: &mut BlockEntityTickEvent<'_>) {
+        let Some(contents) = state().pending.remove(&(host.dimension(), event.pos)) else {
             return;
         };
         if event.entity.items.len() < contents.len() {

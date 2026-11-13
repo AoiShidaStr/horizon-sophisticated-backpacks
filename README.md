@@ -31,11 +31,13 @@ One file holds both halves: `dist/sophisticated_backpacks.hmod`.
 
 - Every backpack item is an item container (`item_container`, API 370): its
   contents live in the stack's `minecraft:container`, so they are saved and
-  sent with the item and an empty backpack stacks with a new one.
-- Right-clicking a backpack in the hand opens an interactive menu
-  (`use_item` + `open_menu`/`set_menu_items`): left click moves a whole stack,
-  right click half a stack, from and to the player's 36 inventory slots. Every
-  click is checked and applied on the server on the next inventory tick.
+  sent with the item. (Backpacks themselves don't stack: the item is a
+  `leather_chestplate` template, so its stack size is 1.)
+- Right-clicking a backpack in the hand (or off hand) opens an interactive
+  menu (`use_item` + `open_menu`/`set_menu_items`): left click moves a whole
+  stack, right click half a stack, from and to the player's 36 inventory
+  slots. Every click is checked and applied on the server on the next
+  inventory tick.
 - The **backpack key** (default `B`, rebindable in Options > Mods) opens the
   backpack worn in the chest slot: the client sends a message on
   `sophisticated_backpacks:open` (`key` + `net_send_to_server`) and the server
