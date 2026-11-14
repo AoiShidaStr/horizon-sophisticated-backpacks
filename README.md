@@ -5,7 +5,10 @@ to **Horizon** (the Rust rewrite of Minecraft Java 26.3). It is not a Java-mod
 bridge: the content is a content mod (`.hmod`) and the behaviour is a native
 trait mod compiled into the game.
 
-One file holds both halves: `dist/sophisticated_backpacks.hmod`.
+`scripts/pack.py` writes `target/sophisticated_backpacks.hmod` (content,
+`.hmod`) and `target/sophisticated_backpacks.hnmod` (native, `.hnmod`), the
+files the server and the client pack install, and `dist/sophisticated_backpacks.hmod`,
+the same content and native bundle in one file.
 
 ## Done
 
@@ -91,8 +94,12 @@ CARGO_TARGET_DIR=/opt/build/target cargo build -p horizon-native-game --no-defau
 # client flavour
 CARGO_TARGET_DIR=/opt/build/target cargo check -p horizon-client
 
-# combined file
-python3 scripts/pack.py                 # -> dist/sophisticated_backpacks.hmod
+# the two files the client pack and server take, plus the combined one
+python3 scripts/pack.py                 # -> target/sophisticated_backpacks.hmod
+                                        #    target/sophisticated_backpacks.hnmod
+                                        #    dist/sophisticated_backpacks.hmod (both halves)
+cargo horizon-mod check target/sophisticated_backpacks.hmod
+cargo horizon-mod check target/sophisticated_backpacks.hnmod
 cargo horizon-mod check dist/sophisticated_backpacks.hmod
 ```
 
